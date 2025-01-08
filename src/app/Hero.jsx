@@ -1,6 +1,5 @@
-// src/App.jsx
 import React, { useState } from 'react';
-import Calendar from 'react-calendar'; // Install with `npm install react-calendar`
+import Calendar from 'react-calendar'; 
 
 const App = () => {
   const [selectedDate, setSelectedDate] = useState(null); // Store selected date
@@ -29,7 +28,7 @@ const App = () => {
       if (start < end) {
         const hoursWorked = (end - start) / (1000 * 60 * 60);
         const newEntry = {
-          date: selectedDate.toDateString(),
+          date: selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
           start: timeRange.start,
           end: timeRange.end,
           hours: hoursWorked,
@@ -39,11 +38,15 @@ const App = () => {
 
         setWorkDetails([...workDetails, newEntry]);
       } else {
-        alert('End time must be after start time.');
+        alert('La hora de salida debe ser mayor a la hora de entrada.');
       }
     } else {
-      alert('Please fill in all fields.');
+      alert('Por favor, completa todos los campos');
     }
+  };
+
+  const deleteWorkDetail = (index) => {
+    setWorkDetails(workDetails.filter((_, i) => i !== index));
   };
 
   const calculateTotalEarnings = () => {
@@ -55,7 +58,7 @@ const App = () => {
       <h1>Income Tracker</h1>
 
       <div style={{ marginBottom: '20px' }}>
-        <h2>Select a Date:</h2>
+        <h2>Selecciona una fecha:</h2>
         <Calendar
           onChange={handleDateChange}
           value={selectedDate}
@@ -64,9 +67,9 @@ const App = () => {
 
       {selectedDate && (
         <div style={{ marginBottom: '20px' }}>
-          <h2>Enter Work Details for {selectedDate.toDateString()}:</h2>
+          <h2>{selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}:</h2>
           <div>
-            <label>Start Time:</label>
+            <label>Hora de entrada:</label>
             <input
               type="time"
               name="start"
@@ -74,7 +77,7 @@ const App = () => {
               onChange={handleTimeChange}
               style={{ padding: '5px', fontSize: '16px', marginRight: '10px' }}
             />
-            <label>End Time:</label>
+            <label>Hora de salida:</label>
             <input
               type="time"
               name="end"
@@ -84,10 +87,10 @@ const App = () => {
             />
           </div>
           <div style={{ marginTop: '10px' }}>
-            <label>Hourly Rate:</label>
+            <label>Cuánto gano por hora:</label>
             <input
               type="number"
-              placeholder="Hourly Rate"
+              placeholder="1000.00"
               value={dailyRate}
               onChange={handleDailyRateChange}
               style={{ padding: '5px', fontSize: '16px', marginLeft: '10px' }}
@@ -97,22 +100,28 @@ const App = () => {
             onClick={saveWorkDetails}
             style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer', marginTop: '10px' }}
           >
-            Save Work Details
+            Guardar turno
           </button>
         </div>
       )}
 
       <div style={{ marginTop: '20px' }}>
-        <h2>Total Earnings:</h2>
+        <h2>Ganancias totales:</h2>
         <p>${calculateTotalEarnings().toFixed(2)}</p>
       </div>
 
       <div style={{ marginTop: '20px' }}>
-        <h2>Work Hours Summary:</h2>
+        <h2>Sumario final:</h2>
         <ul>
           {workDetails.map((entry, index) => (
             <li key={index}>
-              {entry.date}: {entry.start} - {entry.end}, {entry.hours.toFixed(2)} hours @ ${entry.rate.toFixed(2)} / hour, Earnings: ${entry.earnings.toFixed(2)}
+              <button
+                onClick={() => deleteWorkDetail(index)}
+                style={{ marginRight: '10px', cursor: 'pointer', color: 'red', border: 'none', background: 'none' }}
+              >
+                🗑️
+              </button>
+              {entry.date}: {entry.start} - {entry.end}, {entry.hours.toFixed(2)} horas @ ${entry.rate.toFixed(2)} / hora, Cobro total: ${entry.earnings.toFixed(2)}
             </li>
           ))}
         </ul>
