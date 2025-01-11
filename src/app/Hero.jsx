@@ -138,6 +138,8 @@ const App = () => {
       
       {/* <Navbar></Navbar> */}
 
+      <h1>Income Tracker</h1>
+
       <div style={{ marginBottom: "20px" }}>
         <h2>Selecciona una fecha:</h2>
         <Calendar onChange={handleDateChange} value={selectedDate} />
