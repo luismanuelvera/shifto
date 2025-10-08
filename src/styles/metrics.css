@@ -1,0 +1,190 @@
+/* Métricas - Estilos específicos y seguros */
+.metrics {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: transparent;
+}
+
+.metrics__header {
+  text-align: center;
+  margin-bottom: 30px;
+  background: transparent;
+}
+
+.metrics__header h1 {
+  color: #1f2937 !important;
+  margin-bottom: 8px;
+  font-size: 2rem;
+  font-weight: 700;
+  background: transparent !important;
+}
+
+.metrics__header p {
+  color: #6b7280 !important;
+  font-size: 1.1rem;
+  background: transparent !important;
+}
+
+.metrics__empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.metrics__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+/* Tarjetas de métricas */
+.metric-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  color: #1f2937;
+}
+
+.metric-card * {
+  background: transparent !important;
+}
+
+.metric-card__header {
+  margin-bottom: 20px;
+  background: transparent;
+  padding: 0;
+}
+
+.metric-card__header h4 {
+  color: #1f2937 !important;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.metric-card__content {
+  color: #374151 !important;
+  background: transparent !important;
+}
+
+/* Comparaciones de métricas */
+.metric-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.metric-item--highlight {
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.metric-label {
+  font-weight: 500;
+  color: #6b7280 !important;
+  background: transparent !important;
+}
+
+.metric-value {
+  font-weight: 600;
+  color: #1f2937 !important;
+  background: transparent !important;
+}
+
+.metric-value.positive {
+  color: #059669 !important;
+  background: transparent !important;
+}
+
+/* Prevenir interferencias de CSS externo */
+.metrics * {
+  background: transparent !important;
+}
+
+.metrics h1,
+.metrics h2,
+.metrics h3,
+.metrics h4,
+.metrics h5,
+.metrics h6 {
+  color: #1f2937 !important;
+  background: transparent !important;
+}
+
+.metrics p,
+.metrics span,
+.metrics div {
+  background: transparent !important;
+}
+
+/* Solo las tarjetas deben tener fondo blanco */
+.metric-card {
+  background: white !important;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.empty-state__icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.empty-state p {
+  color: #6b7280;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .metrics {
+    padding: 16px;
+  }
+  
+  .metrics__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .metric-card {
+    padding: 20px;
+  }
+  
+  .metrics__header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .metrics__header p {
+    font-size: 1rem;
+  }
+}

@@ -1,10 +1,202 @@
+/* Importar estilos de componentes */
+@import './styles/dashboard.css';
+@import './styles/calendar.css';
+@import './styles/forms.css';
+@import './styles/navigation.css';
+
+/* Estilos base del App */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.app {
+  min-height: 100vh;
+  background: #f9fafb;
+  display: flex;
+  flex-direction: column;
+}
+
+.app__main {
+  flex: 1;
+  padding: 20px 0;
 }
 
 li {
   list-style-type: none;
+}
+
+/* Estilos para modales y overlays */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para formularios */
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.form-field input.error,
+.form-field textarea.error,
+.form-field select.error {
+  border-color: #dc2626;
+}
+
+.form-error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.form-help {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+/* Botones */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-size: 1rem;
+  color: white;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+  color: white;
+}
+
+.btn-secondary {
+  background: #6b7280;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #4b5563;
+  color: white;
+}
+
+.btn-success {
+  background: #059669;
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #047857;
+  color: white;
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #b91c1c;
+  color: white;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid currentColor;
+  color: #374151;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: currentColor;
+  color: white;
+}
+
+.btn-outline.btn-primary {
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-outline.btn-primary:hover:not(:disabled) {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-outline.btn-success {
+  color: #059669;
+  border-color: #059669;
+}
+
+.btn-outline.btn-success:hover:not(:disabled) {
+  background: #059669;
+  color: white;
+}
+
+.btn-outline.btn-danger {
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.btn-outline.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+  color: white;
 }

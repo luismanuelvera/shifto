@@ -44,8 +44,6 @@ const App = () => {
         };
 
         setWorkDetails([...workDetails, newEntry]);
-      } else {
-        alert("La hora de salida debe ser mayor a la hora de entrada.");
       }
     } else {
       alert("Por favor, completa todos los campos");
@@ -64,8 +62,14 @@ const App = () => {
   };
 
   const calculateTotalEarnings = () => {
-    return workDetails.reduce((total, entry) => total + entry.earnings, 0);
-  };
+      return shifts
+        .filter(shift => !isShiftExpired(shift)) // Excluir turnos vencidos
+        .reduce((total, shift) => {
+          // Priorizar ganancias basadas en tiempo real trabajado
+          const earnings = shift.actualEarnings || shift.earnings || 0;
+          return total + earnings;
+        }, 0);
+    };
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
