@@ -1,19 +1,35 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useShifts } from '../../context/ShiftContext';
 import { formatDate, isShiftExpired } from '../../utils/dateUtils';
+import TaskManager from '../tasks/TaskManager';
 
 const ShiftPreview = ({ shift, onClose, onEdit }) => {
-  const { deleteShift } = useShifts();
+  const { deleteShift, updateShift, shifts } = useShifts();
 
-  if (!shift) return null;
+  // Obtener la versión más actualizada del turno desde el contexto
+  const currentShift = useMemo(() => {
+    const foundShift = shifts.find(s => s.id === shift?.id);
+    return foundShift || shift;
+  }, [shifts, shift]);
+
+  if (!currentShift) return null;
+
+  // Función para actualizar las tareas del turno
+  const handleTaskUpdate = (updatedTasks) => {
+    const updatedShift = {
+      ...currentShift,
+      tasks: updatedTasks
+    };
+    updateShift(updatedShift);
+  };
 
   // Obtener el estado real del turno
-  const getShiftRealStatus = (shift) => {
-    if (shift.status === 'active' || shift.status === 'completed') {
-      return shift.status;
+  const getShiftRealStatus = (shiftData) => {
+    if (shiftData.status === 'active' || shiftData.status === 'completed') {
+      return shiftData.status;
     }
     
-    if (isShiftExpired(shift)) {
+    if (isShiftExpired(shiftData)) {
       return 'expired';
     }
     
@@ -36,8 +52,8 @@ const ShiftPreview = ({ shift, onClose, onEdit }) => {
   };
 
   const calculateDuration = () => {
-    const [startHour, startMinute] = shift.startTime.split(':').map(Number);
-    const [endHour, endMinute] = shift.endTime.split(':').map(Number);
+    const [startHour, startMinute] = currentShift.startTime.split(':').map(Number);
+    const [endHour, endMinute] = currentShift.endTime.split(':').map(Number);
     
     let duration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
     
@@ -50,23 +66,16 @@ const ShiftPreview = ({ shift, onClose, onEdit }) => {
   };
 
   const handleDelete = () => {
-    // Prevenir eliminación de turnos completados
-    if (shift.status === 'completed') {
-      alert('⚠️ No se pueden eliminar turnos completados. Los turnos completados se mantienen para el historial y cálculo de métricas.');
-      return;
-    }
-    
-    if (window.confirm('¿Estás seguro de que quieres eliminar este turno? Esta acción no se puede deshacer.')) {
-      deleteShift(shift.id);
+    if (window.confirm('¿Estás seguro de que quieres eliminar este turno?')) {
+      deleteShift(currentShift.id);
       onClose();
     }
   };
 
-  const status = getShiftRealStatus(shift);
+  const status = getShiftRealStatus(currentShift);
   const statusInfo = getStatusInfo(status);
   const duration = calculateDuration();
-  const actualDuration = shift.actualHours || duration;
-  const completedTasks = shift.tasks ? shift.tasks.filter(task => task.completed).length : 0;
+  const actualDuration = currentShift.actualHours || duration;
 
   return (
     <div className="shift-preview">
@@ -100,7 +109,7 @@ const ShiftPreview = ({ shift, onClose, onEdit }) => {
                 <div className="detail-item">
                   <span className="label">📅 Fecha:</span>
                   <span className="value">
-                    {formatDate(new Date(shift.date), { 
+                    {formatDate(new Date(currentShift.date), { 
                       weekday: 'long', 
                       day: 'numeric', 
                       month: 'long',
@@ -110,13 +119,13 @@ const ShiftPreview = ({ shift, onClose, onEdit }) => {
                 </div>
                 <div className="detail-item">
                   <span className="label">⏰ Horario:</span>
-                  <span className="value">{shift.startTime} - {shift.endTime}</span>
+                  <span className="value">{currentShift.startTime} - {currentShift.endTime}</span>
                 </div>
                 <div className="detail-item">
                   <span className="label">⏱️ Duración programada:</span>
                   <span className="value">{duration.toFixed(2)} horas</span>
                 </div>
-                {shift.actualHours && (
+                {currentShift.actualHours && (
                   <div className="detail-item">
                     <span className="label">⏱️ Duración real:</span>
                     <span className="value">{actualDuration.toFixed(2)} horas</span>
@@ -131,40 +140,40 @@ const ShiftPreview = ({ shift, onClose, onEdit }) => {
               <div className="shift-preview__details">
                 <div className="detail-item">
                   <span className="label">💰 Ganancias programadas:</span>
-                  <span className="value">${shift.earnings.toFixed(2)}</span>
+                  <span className="value">${currentShift.earnings.toFixed(2)}</span>
                 </div>
-                {shift.actualEarnings && (
+                {currentShift.actualEarnings && (
                   <div className="detail-item">
                     <span className="label">💰 Ganancias reales:</span>
-                    <span className="value">${shift.actualEarnings.toFixed(2)}</span>
+                    <span className="value">${currentShift.actualEarnings.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="detail-item">
                   <span className="label">💵 Tarifa por hora:</span>
-                  <span className="value">${shift.hourlyRate.toFixed(2)}</span>
+                  <span className="value">${currentShift.hourlyRate.toFixed(2)}</span>
                 </div>
               </div>
             </div>
 
             {/* Tiempos reales (si está completado) */}
-            {shift.actualStartTime && (
+            {currentShift.actualStartTime && (
               <div className="shift-preview__section">
                 <h3>Horarios reales</h3>
                 <div className="shift-preview__details">
                   <div className="detail-item">
                     <span className="label">▶️ Hora de inicio:</span>
                     <span className="value">
-                      {new Date(shift.actualStartTime).toLocaleTimeString('es-ES', {
+                      {new Date(currentShift.actualStartTime).toLocaleTimeString('es-ES', {
                         hour: '2-digit',
                         minute: '2-digit'
                       })}
                     </span>
                   </div>
-                  {shift.actualEndTime && (
+                  {currentShift.actualEndTime && (
                     <div className="detail-item">
                       <span className="label">⏹️ Hora de fin:</span>
                       <span className="value">
-                        {new Date(shift.actualEndTime).toLocaleTimeString('es-ES', {
+                        {new Date(currentShift.actualEndTime).toLocaleTimeString('es-ES', {
                           hour: '2-digit',
                           minute: '2-digit'
                         })}
@@ -176,28 +185,21 @@ const ShiftPreview = ({ shift, onClose, onEdit }) => {
             )}
 
             {/* Tareas */}
-            {shift.tasks && shift.tasks.length > 0 && (
-              <div className="shift-preview__section">
-                <h3>Tareas ({completedTasks}/{shift.tasks.length})</h3>
-                <div className="shift-preview__tasks">
-                  {shift.tasks.map((task, index) => (
-                    <div key={index} className={`task-item ${task.completed ? 'completed' : 'pending'}`}>
-                      <span className="task-icon">
-                        {task.completed ? '✅' : '⏳'}
-                      </span>
-                      <span className="task-text">{task.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <div className="shift-preview__section">
+              <h3>Tareas {currentShift.tasks && currentShift.tasks.length > 0 && `(${currentShift.tasks.filter(task => task.status === 'completed').length}/${currentShift.tasks.length})`}</h3>
+              <TaskManager 
+                tasks={currentShift.tasks || []}
+                onTaskUpdate={handleTaskUpdate}
+                editable={getShiftRealStatus(currentShift) === 'active' || getShiftRealStatus(currentShift) === 'scheduled'}
+              />
+            </div>
 
             {/* Notas */}
-            {shift.notes && (
+            {currentShift.notes && (
               <div className="shift-preview__section">
                 <h3>Notas</h3>
                 <div className="shift-preview__notes">
-                  {shift.notes}
+                  {currentShift.notes}
                 </div>
               </div>
             )}
@@ -209,7 +211,7 @@ const ShiftPreview = ({ shift, onClose, onEdit }) => {
                 type="button"
                 className="shift-preview__action-button shift-preview__action-button--primary"
                 onClick={() => {
-                  onEdit(shift);
+                  onEdit(currentShift);
                   onClose();
                 }}
               >

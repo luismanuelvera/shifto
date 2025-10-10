@@ -21,8 +21,7 @@ const NotesAndTasks = ({
     const newTask = {
       id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       text: newTaskText.trim(),
-      completed: false,
-      failed: false,
+      status: 'pending',
       createdAt: new Date().toISOString()
     };
 
@@ -44,8 +43,7 @@ const NotesAndTasks = ({
     const newTasks = taskTexts.map((text, index) => ({
       id: `task_${Date.now()}_${index}_${Math.random().toString(36).substr(2, 9)}`,
       text: text,
-      completed: false,
-      failed: false,
+      status: 'pending',
       createdAt: new Date().toISOString()
     }));
 
@@ -58,29 +56,26 @@ const NotesAndTasks = ({
     onTasksChange(tasks.filter(task => task.id !== taskId));
   };
 
-  const updateTaskStatus = (taskId, status) => {
-    onTasksChange(tasks.map(task => 
-      task.id === taskId 
-        ? { 
-            ...task, 
-            completed: status === 'completed',
-            failed: status === 'failed',
-            completedAt: status !== 'pending' ? new Date().toISOString() : null
-          } 
-        : task
-    ));
-  };
-
   const getTaskStatusColor = (task) => {
-    if (task.completed) return 'success';
-    if (task.failed) return 'error';
-    return 'pending';
+    switch (task.status) {
+      case 'completed':
+        return 'success';
+      case 'cancelled':
+        return 'error';
+      default:
+        return 'pending';
+    }
   };
 
   const getTaskStatusText = (task) => {
-    if (task.completed) return 'Completada ✅';
-    if (task.failed) return 'Fallida ❌';
-    return 'Pendiente ⏳';
+    switch (task.status) {
+      case 'completed':
+        return 'Completada';
+      case 'cancelled':
+        return 'Cancelada';
+      default:
+        return 'Pendiente';
+    }
   };
 
   return (
@@ -194,49 +189,14 @@ const NotesAndTasks = ({
                   <span className="notes-and-tasks__task-text">
                     {task.text}
                   </span>
-                  
-                  {showTaskCompletion && (
-                    <div className="notes-and-tasks__task-status">
-                      <span className="notes-and-tasks__task-status-text">
-                        {getTaskStatusText(task)}
-                      </span>
-                    </div>
-                  )}
+                  <div className="notes-and-tasks__task-status">
+                    <span className="notes-and-tasks__task-status-text">
+                      {getTaskStatusText(task)}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="notes-and-tasks__task-actions">
-                  {showTaskCompletion && !task.completed && !task.failed && (
-                    <>
-                      <button
-                        type="button"
-                        className="notes-and-tasks__task-action notes-and-tasks__task-action--complete"
-                        onClick={() => updateTaskStatus(task.id, 'completed')}
-                        title="Marcar como completada"
-                      >
-                        ✅
-                      </button>
-                      <button
-                        type="button"
-                        className="notes-and-tasks__task-action notes-and-tasks__task-action--fail"
-                        onClick={() => updateTaskStatus(task.id, 'failed')}
-                        title="Marcar como fallida"
-                      >
-                        ❌
-                      </button>
-                    </>
-                  )}
-                  
-                  {showTaskCompletion && (task.completed || task.failed) && (
-                    <button
-                      type="button"
-                      className="notes-and-tasks__task-action notes-and-tasks__task-action--reset"
-                      onClick={() => updateTaskStatus(task.id, 'pending')}
-                      title="Marcar como pendiente"
-                    >
-                      ↩️
-                    </button>
-                  )}
-
                   {!showTaskCompletion && (
                     <button
                       type="button"
@@ -260,13 +220,13 @@ const NotesAndTasks = ({
                 Total: {tasks.length}
               </span>
               <span className="notes-and-tasks__stat notes-and-tasks__stat--success">
-                Completadas: {tasks.filter(t => t.completed).length}
+                Completadas: {tasks.filter(t => t.status === 'completed').length}
               </span>
               <span className="notes-and-tasks__stat notes-and-tasks__stat--error">
-                Fallidas: {tasks.filter(t => t.failed).length}
+                Canceladas: {tasks.filter(t => t.status === 'cancelled').length}
               </span>
               <span className="notes-and-tasks__stat notes-and-tasks__stat--pending">
-                Pendientes: {tasks.filter(t => !t.completed && !t.failed).length}
+                Pendientes: {tasks.filter(t => t.status === 'pending').length}
               </span>
             </div>
           </div>

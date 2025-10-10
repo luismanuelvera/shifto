@@ -57,11 +57,15 @@ const shiftReducer = (state, action) => {
       };
 
     case SHIFT_ACTIONS.UPDATE_SHIFT:
+      console.log('UPDATE_SHIFT reducer ejecutado:', action.payload);
+      console.log('Estado actual shifts:', state.shifts);
+      const updatedShifts = state.shifts.map(shift => 
+        shift.id === action.payload.id ? action.payload : shift
+      );
+      console.log('Shifts actualizados:', updatedShifts);
       return {
         ...state,
-        shifts: state.shifts.map(shift => 
-          shift.id === action.payload.id ? action.payload : shift
-        )
+        shifts: updatedShifts
       };
 
     case SHIFT_ACTIONS.DELETE_SHIFT:
@@ -325,6 +329,11 @@ export const ShiftProvider = ({ children }) => {
     dispatch({ type: SHIFT_ACTIONS.DELETE_SHIFT, payload: shiftId });
   };
 
+  const updateShift = (updatedShift) => {
+    console.log('updateShift llamado con:', updatedShift);
+    dispatch({ type: SHIFT_ACTIONS.UPDATE_SHIFT, payload: updatedShift });
+  };
+
   const clearAllShifts = () => {
     dispatch({ type: SHIFT_ACTIONS.CLEAR_ALL });
     shiftsStorage.remove();
@@ -338,6 +347,7 @@ export const ShiftProvider = ({ children }) => {
   const contextValue = {
     ...state,
     addShift,
+    updateShift,
     startShift,
     endShift,
     deleteShift,

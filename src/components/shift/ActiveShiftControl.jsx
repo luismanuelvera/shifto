@@ -5,6 +5,8 @@ import { formatDate, isShiftExpired, calculateShiftStartDateTime, calculateShift
 
 const ActiveShiftControl = () => {
   const { shifts, activeShift, startShift, endShift, error, clearError } = useShifts();
+  // Obtener el turno activo actualizado desde el contexto
+  const currentActiveShift = activeShift ? (shifts.find(s => s.id === activeShift.id) || activeShift) : null;
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [elapsedTime, setElapsedTime] = useState('00:00:00');
   const [endNotes, setEndNotes] = useState('');
@@ -331,10 +333,10 @@ const ActiveShiftControl = () => {
             </div>
             <div className="active-shift-control__modal-body">
               <NotesAndTasks
-                notes={activeShift.notes || ''}
-                tasks={activeShift.tasks || []}
+                notes={currentActiveShift?.notes || ''}
+                tasks={currentActiveShift?.tasks || []}
                 onNotesChange={() => {}} // Solo lectura en el modal
-                onTasksChange={() => {}} // Solo lectura en el modal
+                onTasksChange={() => {}} // Solo lectura en el modal - solo muestra estado visual
                 showTaskCompletion={true}
               />
             </div>

@@ -1,0 +1,446 @@
+/* Task Manager Styles */
+.task-manager {
+  width: 100%;
+}
+
+.task-manager__empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+}
+
+.task-manager__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.task-manager__item {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.task-manager__item:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.task-manager__item--pending {
+  border-left: 5px solid #f59e0b;
+  background: linear-gradient(to right, #fef3c7, #ffffff);
+}
+
+.task-manager__item--completed {
+  border-left: 5px solid #10b981;
+  background: linear-gradient(to right, #d1fae5, #ffffff);
+}
+
+.task-manager__item--cancelled {
+  border-left: 5px solid #ef4444;
+  background: linear-gradient(to right, #fecaca, #ffffff);
+  opacity: 0.9;
+}
+
+.task-manager__item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.task-manager__item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.task-manager__icon {
+  font-size: 1.25rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.task-manager__text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1f2937;
+  line-height: 1.4;
+}
+
+.task-manager__item--completed .task-manager__text {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+.task-manager__item--cancelled .task-manager__text {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+.task-manager__status {
+  flex-shrink: 0;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge--pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge--completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge--cancelled {
+  background: #fecaca;
+  color: #991b1b;
+}
+
+.task-manager__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.task-action-btn {
+  padding: 8px 16px;
+  border: 2px solid;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.task-action-btn--complete {
+  background: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
+.task-action-btn--complete:hover {
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-1px);
+}
+
+.task-action-btn--cancel {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.task-action-btn--cancel:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.task-action-btn--reset {
+  background: #6b7280;
+  color: white;
+  border-color: #6b7280;
+}
+
+.task-action-btn--reset:hover {
+  background: #4b5563;
+  border-color: #4b5563;
+  transform: translateY(-1px);
+}
+
+.task-manager__cancellation {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  border-left: 4px solid #ef4444;
+}
+
+.cancellation-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #991b1b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.cancellation-reason {
+  font-size: 0.9rem;
+  color: #7f1d1d;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.task-manager__timestamp {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: #6b7280;
+  background: #f9fafb;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Modal para cancelación */
+.task-cancellation-modal .modal-content {
+  max-width: 500px;
+}
+
+.task-to-cancel {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #ef4444;
+  margin-bottom: 20px;
+}
+
+.task-to-cancel strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #1f2937;
+  font-size: 0.9rem;
+}
+
+.task-to-cancel p {
+  margin: 0;
+  color: #4b5563;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 30px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.required {
+  color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .task-manager__item {
+    padding: 16px;
+  }
+  
+  .task-manager__item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .task-manager__actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .task-action-btn {
+    justify-content: center;
+    padding: 10px 16px;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Task Cancel Modal Styles for NotesAndTasks component */
+.task-cancel-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.task-cancel-modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.task-cancel-modal__content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-cancel-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.task-cancel-modal__header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.task-cancel-modal__close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.task-cancel-modal__close:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.task-cancel-modal__body {
+  padding: 0 24px;
+  flex: 1;
+}
+
+.task-cancel-modal__body p {
+  margin: 0 0 16px 0;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.task-cancel-modal__textarea {
+  width: 100%;
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s ease;
+}
+
+.task-cancel-modal__textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.task-cancel-modal__textarea::placeholder {
+  color: #9ca3af;
+}
+
+.task-cancel-modal__actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px 24px 24px 24px;
+  border-top: 1px solid #e5e7eb;
+  justify-content: flex-end;
+}
+
+.task-cancel-modal__button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-cancel-modal__button--secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.task-cancel-modal__button--secondary:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.task-cancel-modal__button--danger {
+  background: #ef4444;
+  color: white;
+}
+
+.task-cancel-modal__button--danger:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.task-cancel-modal__button--danger:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
