@@ -3,11 +3,13 @@ import Calendar from 'react-calendar';
 import { useShifts } from '../../context/ShiftContext';
 import { formatDate, getShiftDateRangeFromShift, isShiftExpired, formatHours } from '../../utils/dateUtils';
 import ShiftPreview from '../shift/ShiftPreview';
+import DayDetailsModal from './DayDetailsModal';
 
 const ShiftCalendar = ({ onShiftClick }) => {
   const { shifts } = useShifts();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
   const [previewShift, setPreviewShift] = useState(null);
+  const [showDayDetails, setShowDayDetails] = useState(false);
 
   // Obtener el estado real del turno incluyendo vencido
   const getShiftRealStatus = (shift) => {
@@ -48,51 +50,51 @@ const ShiftCalendar = ({ onShiftClick }) => {
     const hasScheduled = dayShifts.some(shift => getShiftRealStatus(shift) === 'scheduled');
 
     if (hasActive) classes.push('has-active');
-    else if (hasCompleted) classes.push('has-completed');
-    else if (hasExpired) classes.push('has-expired');
-    else if (hasScheduled) classes.push('has-scheduled');
+    if (hasCompleted) classes.push('has-completed');
+    if (hasExpired) classes.push('has-expired');
+    if (hasScheduled) classes.push('has-scheduled');
 
     return classes.join(' ');
   };
 
-  // Contenido adicional para cada día
+  // Obtener contenido para mostrar en las celdas del calendario
   const getTileContent = ({ date, view }) => {
     if (view !== 'month') return null;
 
     const dayShifts = getShiftsForDate(date);
     if (dayShifts.length === 0) return null;
 
+    // Mostrar indicadores para cada estado de turno
+    const statusCounts = {
+      active: dayShifts.filter(shift => getShiftRealStatus(shift) === 'active').length,
+      completed: dayShifts.filter(shift => getShiftRealStatus(shift) === 'completed').length,
+      expired: dayShifts.filter(shift => getShiftRealStatus(shift) === 'expired').length,
+      scheduled: dayShifts.filter(shift => getShiftRealStatus(shift) === 'scheduled').length
+    };
+
     const totalEarnings = dayShifts.reduce((sum, shift) => {
       return sum + (shift.actualEarnings || shift.earnings || 0);
     }, 0);
 
-    const hasOvernightShifts = dayShifts.some(shift => shift.isOvernight);
-
     return (
       <div className="calendar-tile-content">
-        <div className="shift-count">
-          {dayShifts.length} turno{dayShifts.length !== 1 ? 's' : ''}
-          {hasOvernightShifts && <span className="overnight-indicator">🌙</span>}
+        <div className="shift-indicators">
         </div>
-        {totalEarnings > 0 && (
-          <div className="shift-earnings">
-            ${totalEarnings.toFixed(0)}
-          </div>
-        )}
       </div>
     );
   };
 
-  // Manejar click en una fecha
+  // Manejar click en el calendario
   const handleDateClick = (date) => {
     setSelectedDate(date);
     const dayShifts = getShiftsForDate(date);
-    if (dayShifts.length > 0 && onShiftClick) {
-      onShiftClick(date, dayShifts);
+    if (dayShifts.length > 0) {
+      setShowDayDetails(true);
     }
   };
 
   const getSelectedDateShifts = () => {
+    if (!selectedDate) return [];
     return getShiftsForDate(selectedDate);
   };
 
@@ -140,116 +142,32 @@ const ShiftCalendar = ({ onShiftClick }) => {
         </div>
       </div>
 
-      <div className="shift-calendar__container">
-        <div className="shift-calendar__calendar">
-          <Calendar
-            onChange={handleDateClick}
-            value={selectedDate}
-            tileClassName={getTileClassName}
-            tileContent={getTileContent}
-            locale="es-ES"
-            className="shifto-calendar shifto-calendar--detailed"
-          />
-        </div>
-
-        <div className="shift-calendar__details">
-          <h3>
-            {formatDate(selectedDate, { 
-              weekday: 'long', 
-              day: 'numeric', 
-              month: 'long',
-              year: 'numeric'
-            })}
-          </h3>
-
-          {selectedDateShifts.length === 0 ? (
-            <div className="shift-calendar__no-shifts">
-              📅 No hay turnos programados para este día
-            </div>
-          ) : (
-            <div className="shift-calendar__shifts-list">
-              {selectedDateShifts.map(shift => (
-                <div 
-                  key={shift.id} 
-                  className={`shift-calendar__shift-card shift-calendar__shift-card--${getShiftRealStatus(shift)}`}
-                  onClick={() => handleShiftClick(shift)}
-                >
-                  <div className="shift-calendar__shift-header">
-                    <span className="shift-status">
-                      {getShiftStatusIcon(shift)} {getShiftStatusText(shift)}
-                    </span>
-                    <span className="shift-time">
-                      {formatShiftTime(shift)}
-                    </span>
-                  </div>
-
-                  <div className="shift-calendar__shift-details">
-                    <div className="shift-detail">
-                      <span className="label">Horas:</span>
-                      <span className="value">
-                        {shift.actualHours 
-                          ? formatHours(shift.actualHours)
-                          : formatHours(shift.hoursWorked)
-                        }
-                      </span>
-                    </div>
-                    <div className="shift-detail">
-                      <span className="label">Ganancias:</span>
-                      <span className="value">
-                        ${shift.actualEarnings 
-                          ? shift.actualEarnings.toFixed(2) 
-                          : shift.earnings.toFixed(2)
-                        }
-                      </span>
-                    </div>
-                    {shift.tasks && shift.tasks.length > 0 && (
-                      <div className="shift-detail">
-                        <span className="label">Tareas:</span>
-                        <span className="value">
-                          {shift.tasks.filter(t => t.completed).length}/{shift.tasks.length}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {shift.notes && (
-                    <div className="shift-calendar__shift-notes">
-                      📝 {shift.notes.substring(0, 50)}
-                      {shift.notes.length > 50 && '...'}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {selectedDateShifts.length > 0 && (
-            <div className="shift-calendar__day-summary">
-              <div className="summary-item">
-                <span className="label">Total turnos:</span>
-                <span className="value">{selectedDateShifts.length}</span>
-              </div>
-              <div className="summary-item">
-                <span className="label">Horas totales:</span>
-                <span className="value">
-                  {formatHours(selectedDateShifts.reduce((sum, shift) => {
-                    return sum + (shift.actualHours || shift.hoursWorked || 0);
-                  }, 0))}
-                </span>
-              </div>
-              <div className="summary-item">
-                <span className="label">Ganancias totales:</span>
-                <span className="value">
-                  ${selectedDateShifts.reduce((sum, shift) => {
-                    return sum + (shift.actualEarnings || shift.earnings || 0);
-                  }, 0).toFixed(2)}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
+      {/* Calendario principal sin panel lateral */}
+      <div className="shift-calendar__calendar-only">
+        <Calendar
+          onChange={handleDateClick}
+          value={selectedDate}
+          tileClassName={getTileClassName}
+          tileContent={getTileContent}
+          locale="es-ES"
+          className="shifto-calendar shifto-calendar--full-width"
+        />
       </div>
       
+      {/* Modal de detalles del día */}
+      {showDayDetails && selectedDate && (
+        <DayDetailsModal
+          selectedDate={selectedDate}
+          shifts={selectedDateShifts}
+          onClose={() => setShowDayDetails(false)}
+          onShiftClick={handleShiftClick}
+          getShiftRealStatus={getShiftRealStatus}
+          formatShiftTime={formatShiftTime}
+          getShiftStatusIcon={getShiftStatusIcon}
+          getShiftStatusText={getShiftStatusText}
+        />
+      )}
+
       {/* Modal de preview del turno */}
       {previewShift && (
         <ShiftPreview
