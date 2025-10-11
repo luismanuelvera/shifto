@@ -23,7 +23,28 @@ const Profile = () => {
   };
 
   return (
-  <div className="profile-page" style={{ maxWidth: 420, margin: '48px auto', background: 'white', borderRadius: 20, boxShadow: '0 6px 32px rgba(39,125,161,0.10)', padding: '40px 6vw', border: '1.5px solid #eaf3fa', width: '100%' }}>
+    <div className="profile-page" style={{
+      minHeight: '100vh',
+      width: '100vw',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #277DA1 0%, #43AA8B 100%)',
+      padding: 0,
+    }}>
+      <div style={{
+        maxWidth: 'min(480px, 96vw)',
+        background: 'white',
+        borderRadius: 20,
+        boxShadow: '0 6px 32px rgba(39,125,161,0.10)',
+        padding: 'clamp(24px, 6vw, 48px)',
+        border: '1.5px solid #eaf3fa',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: '0 auto',
+      }}>
       <div style={{ textAlign: 'center', marginBottom: 18 }}>
         <span style={{ fontSize: 44, color: '#277DA1', filter: 'drop-shadow(0 2px 8px #eaf3fa)' }}>👤</span>
         <h2 style={{ color: '#277DA1', fontWeight: 800, margin: '10px 0 0 0', fontSize: 24, letterSpacing: 0.5 }}>Editar perfil</h2>
@@ -38,6 +59,7 @@ const Profile = () => {
         {success && <span style={{ color: '#43AA8B', fontWeight: 700, fontSize: 15, marginTop: 6 }}>¡Perfil actualizado!</span>}
       </form>
     </div>
+  </div>
   );
 };
 
