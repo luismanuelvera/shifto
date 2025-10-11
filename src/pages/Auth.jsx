@@ -45,27 +45,34 @@ const Auth = ({ onAuthSuccess }) => {
   };
 
   return (
-    <div className="auth-page" style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #277DA1 0%, #43AA8B 100%)',
-      padding: '0 8px',
-    }}>
-      <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        boxShadow: '0 6px 32px rgba(39,125,161,0.10)',
-        padding: '40px 6vw',
-        minWidth: 0,
-        maxWidth: 420,
-        width: '100%',
+    <div
+      className="auth-page"
+      style={{
+        minHeight: '100vh',
+        width: '100vw',
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
-        border: '1.5px solid #eaf3fa',
-      }}>
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #277DA1 0%, #43AA8B 100%)',
+        padding: 0,
+      }}
+    >
+      <div
+        style={{
+          background: 'white',
+          borderRadius: 20,
+          boxShadow: '0 6px 32px rgba(39,125,161,0.10)',
+          padding: 'clamp(24px, 6vw, 48px)',
+          minWidth: 0,
+          maxWidth: 'min(480px, 96vw)',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          border: '1.5px solid #eaf3fa',
+          margin: '0 auto',
+        }}
+      >
         <div style={{ marginBottom: 24, textAlign: 'center' }}>
           <span style={{ fontSize: 54, color: '#277DA1', filter: 'drop-shadow(0 2px 8px #eaf3fa)' }}>👤</span>
           <h2 style={{ margin: '10px 0 0 0', fontWeight: 800, color: '#277DA1', fontSize: 26, letterSpacing: 0.5 }}>Bienvenido a Shifto</h2>
