@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import UserMenu from '../navbar/UserMenu';
 
 const Navigation = () => {
   const location = useLocation();
@@ -9,7 +11,6 @@ const Navigation = () => {
       <div className="navigation__brand">
         <h1>Shifto</h1>
       </div>
-      
       <div className="navigation__links">
         <Link 
           to="/" 
@@ -32,6 +33,10 @@ const Navigation = () => {
           <span>📈</span>
           Métricas
         </Link>
+      </div>
+      {/* Menú de usuario/configuración */}
+      <div className="navigation__user">
+        <UserMenu />
       </div>
     </nav>
   );
