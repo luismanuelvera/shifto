@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useMutation } from '@tanstack/react-query';
+import { updateProfile } from '../services/api';
 
 const Profile = () => {
   const { user, updateProfile } = useAuth();
@@ -16,10 +18,19 @@ const Profile = () => {
     setSuccess(false);
   };
 
+  const updateMutation = useMutation({
+    mutationFn: (data) => updateProfile(user?.id, data),
+    onSuccess: () => {
+      setSuccess(true);
+    },
+    onError: () => {
+      alert('Error al actualizar perfil');
+    }
+  });
+
   const handleSubmit = e => {
     e.preventDefault();
-    updateProfile(form);
-    setSuccess(true);
+    updateMutation.mutate(form);
   };
 
   return (

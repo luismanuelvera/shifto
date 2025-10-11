@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
 import { ShiftProvider } from './context/ShiftContext';
@@ -39,17 +40,21 @@ function ProtectedRoutes() {
   );
 }
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <AuthProvider>
-      <UserProvider>
-        <ShiftProvider>
-          <Router basename="/shifto">
-            <ProtectedRoutes />
-          </Router>
-        </ShiftProvider>
-      </UserProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <UserProvider>
+          <ShiftProvider>
+            <Router basename="/shifto">
+              <ProtectedRoutes />
+            </Router>
+          </ShiftProvider>
+        </UserProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

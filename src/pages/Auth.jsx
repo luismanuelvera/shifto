@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useMutation } from '@tanstack/react-query';
+import { loginUser, registerUser } from '../services/api';
 
 const Auth = ({ onAuthSuccess }) => {
   const { login, updateProfile } = useAuth();
@@ -20,17 +22,38 @@ const Auth = ({ onAuthSuccess }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      login(form.email, form.password); // Puedes guardar token/data aquí
+      if (onAuthSuccess) onAuthSuccess();
+      navigate('/');
+    },
+    onError: (error) => {
+      alert('Error al iniciar sesión');
+      console.log(error)
+    }
+  });
+
   const handleLogin = e => {
     e.preventDefault();
-    login(form.email, form.password);
-    if (onAuthSuccess) onAuthSuccess();
-    navigate('/');
+    loginMutation.mutate({ email: form.email, password: form.password });
   };
+
+  const registerMutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: (data) => {
+      // Puedes guardar el usuario/data aquí
+      setStep(2);
+    },
+    onError: (error) => {
+      alert('Error al registrar usuario');
+    }
+  });
 
   const handleRegister = e => {
     e.preventDefault();
-    login(form.email, form.password);
-    setStep(2);
+    registerMutation.mutate({ email: form.email, password: form.password });
   };
 
   const handleProfile = e => {
